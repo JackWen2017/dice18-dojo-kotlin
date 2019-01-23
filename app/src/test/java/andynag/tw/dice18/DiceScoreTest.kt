@@ -6,113 +6,75 @@ import org.junit.Test
 class DiceScoreTest {
 
     @Test
-    fun `1, 2, 3, 4 score should be 0`() {
-        val input = "1,2,3,4"
-        val dices = DiceConvert.convert(input)
-        Assert.assertEquals(0, Score.value(dices))
+    fun `All Same`() {
+        for(point in 1..6){
+            val input = listOf(Dice(point),Dice(point),Dice(point),Dice(point))
+            val actual = Score.value(input)
+            val expect = Score.DICE_18 + point
+            Assert.assertEquals(expect, actual)
+        }
     }
 
     @Test
-    fun `1, 2, 3, 3 score should be 3`() {
-        val input = "1,2,3,3"
-        val dices = DiceConvert.convert(input)
-        Assert.assertEquals(3, Score.value(dices))
-    }
-
-    @Test
-    fun `1, 1, 1, 1 should be 19`() {
-        val input = listOf(Dice(1),
-            Dice(1),
-            Dice(1),
-            Dice(1))
-        val actual = Score.value(input)
-        val expect = Score.DICE_18 + 1
-
-        Assert.assertEquals(expect, actual)
-    }
-
-    @Test
-    fun `2, 2, 2, 2 score should be 20`() {
-        val input = listOf(Dice(2),
-            Dice(2),
-            Dice(2),
-            Dice(2))
-        val actual = Score.value(input)
-        val expect = Score.DICE_18 + 2
-
-        Assert.assertEquals(expect, actual)
-    }
-
-    @Test
-    fun `3, 3, 3, 3 score should be 21`() {
-        val input = listOf(Dice(3),
-            Dice(3),
-            Dice(3),
-            Dice(3))
-        val actual = Score.value(input)
-        val expect = Score.DICE_18 + 3
-
-        Assert.assertEquals(expect, actual)
-    }
-
-    @Test
-    fun `4, 4, 4, 4 score should be 22`() {
-        val input = listOf(Dice(4),
-            Dice(4),
-            Dice(4),
-            Dice(4))
-        val actual = Score.value(input)
-        val expect = Score.DICE_18 + 4
-
-        Assert.assertEquals(expect, actual)
-    }
-
-
-    @Test
-    fun `6, 6, 1, 1 score should be 12`() {
-        val input = listOf(
-            Dice(6),
-            Dice(6),
-            Dice(1),
-            Dice(1))
-        val actual = Score.value(input)
-        val expect = Score.DICE_18
-        Assert.assertEquals(expect, actual)
-    }
-
-    @Test
-    fun `6, 6, 6, 2 score should be 0`() {
-        val input = listOf(
-            Dice(6),
-            Dice(6),
-            Dice(6),
-            Dice(2))
-        val actual = Score.value(input)
+    fun `One diff`() {
         val expect = 0
-        Assert.assertEquals(expect, actual)
+        for(point in 1..6) {
+            for(point2 in 1..6){
+                if(point != point2) {
+                    val input = listOf(Dice(point),Dice(point),Dice(point),Dice(point2))
+                    val actual = Score.value(input)
+                    Assert.assertEquals(expect, actual)
+                }
+            }
+        }
     }
 
     @Test
-    fun `6, 6, 1, 2 score should be 3`(){
-        val input = listOf(
-            Dice(6),
-            Dice(6),
-            Dice(1),
-            Dice(2))
-        val actual = Score.value(input)
-        val expect = 3
-        Assert.assertEquals(expect, actual)
+    fun `Two pair`() {
+        for(point in 1..6) {
+            for(point2 in point+1..6){
+                if(point != point2) {
+                    val input = listOf(Dice(point),Dice(point),Dice(point2),Dice(point2))
+                    val actual = Score.value(input)
+                    val expect = point2 * 2
+                    Assert.assertEquals(expect, actual)
+                }
+            }
+        }
     }
 
     @Test
-    fun `2, 2, 3, 3 score should be 6`(){
-        val input = listOf(
-            Dice(2),
-            Dice(2),
-            Dice(3),
-            Dice(3))
-        val actual = Score.value(input)
-        val expect = 6
-        Assert.assertEquals(expect, actual)
+    fun `Three diff`() {
+        for(point in 1..6) {
+            for(point2 in 1..6){
+                if(point != point2) {
+                    for(point3 in point2+1..6){
+                        if(point != point3) {
+                            val input = listOf(Dice(point),Dice(point),Dice(point2),Dice(point3))
+                            val actual = Score.value(input)
+                            val expect = point2 + point3
+                            Assert.assertEquals(expect, actual)
+                        }
+                    }
+                }
+            }
+        }
     }
+
+    @Test
+    fun `All diff`() {
+        val expect = 0
+        for(point in 1..3) {
+            for(point2 in point+1..6){
+                for(point3 in point2+1..6){
+                    for(point4 in point3+1..6){
+                        val input = listOf(Dice(point),Dice(point2),Dice(point3),Dice(point4))
+                        val actual = Score.value(input)
+                        Assert.assertEquals(expect, actual)
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -4,7 +4,7 @@ class Score {
 
     companion object {
         // 林北17拉
-        const val DICE_18 = 18
+        const val DICE_18 = 12
 
         fun value(dices: List<Dice>): Int {
 
@@ -20,7 +20,6 @@ class Score {
                     } else {
                         return (diceGroup.map { it.value }.maxBy { it[0].number }?.get(0)?.number ?: -1) * 2
                     }
-
                 }
                 3 -> {
                     var value = 0
